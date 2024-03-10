@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reģistrācija</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'signup.css' %}">
+</head>
+
+<body>
+    <form method="post">
+        {% csrf_token %}    
+        {{ form.as_p }}
+        <button type="submit">Reģistrēties</button>
+        <a href="{% url 'index' %}" class="btn">Pierakstīties</a>
+    </form>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Poll</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    {% if user.is_authenticated %}
+        <p>Esiet sveicināts, {{ user.username }}!</p>
+    {% else %}
+        <p>Esiet sveicināts, ciemiņ!</p>
+    {% endif %}
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'mainpage' %}">Aptaujas</a>
+            </li>
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'create_poll' %}">Izveidot aptauju</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'index' %}">Izrakstīties</a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+              <a href="{% url 'logout' %}">Izrakstīties</a>
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+      </nav>
+
+      <h2>Izveidot jaunu aptauju</h2>
+      {% if messages %}
+        {% for message in messages %}
+            <p><strong><h2 style="margin:auto">{{ message }}</h2></strong></p>
+        {% endfor %}
+    {% endif %}
+    
+    <form method="post">
+        {% csrf_token %}
+        <label for="question_text" style="margin-left:650px;"><h2>Jautājums:</h2></label>
+        <div class="answers" style="display:flex; flex-direction:column; width:30%; margin:auto">
+        <textarea name="question_text" id="question_text" rows="4" cols="50"></textarea>
+        
+        <div id="answers-container">
+            <div class="answer">
+                <label>Atbilde 1:</label>
+                <input type="text" name="choice_1" style="border: 2px solid black">
+            </div>
+            <div class="answer">
+                <label>Atbilde 2:</label>
+                <input type="text" name="choice_2" style="border: 2px solid black">
+            </div>
+            <div class="answer">
+                <label>Atbilde 3:</label>
+                <input type="text" name="choice_3" style="border: 2px solid black">
+            </div>
+        </div>
+        <button type="button" id="add-answer" style="margin-top:20px;">Pievienot atbildes variantu</button>
+        
+        <button type="submit" style="margin-top:50px; height:50px">Izveidot aptauju</button>
+        </div>
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let answerCount = 3;
+            document.getElementById('add-answer').addEventListener('click', function() {
+                answerCount++;
+                const container = document.getElementById('answers-container');
+                const newAnswer = document.createElement('div');
+                newAnswer.className = 'answer';
+                newAnswer.innerHTML = `<label>Atbilde ${answerCount}:</label><input type="text" name="choice_${answerCount}" style="border: 2px solid black">`;
+                container.appendChild(newAnswer);
+            });
+        });
+        </script>
+        
+
+</body>
+</html>
